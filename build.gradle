@@ -10,5 +10,5 @@ project.ext {
     GIT_DEPTH = GitUtil.commitsSinceLastTag(project)
     GIT_BRANCH = GitUtil.headBranchName(project)
 
-    FULL_VERSION = "${version}".replace("-SNAPSHOT", "-dev+${GIT_DEPTH}-${GIT_COMMIT}")
+    FULL_VERSION = "${version}".replace("-SNAPSHOT", "-dev+${GIT_COMMIT}-(PerchCustom)")
 }
