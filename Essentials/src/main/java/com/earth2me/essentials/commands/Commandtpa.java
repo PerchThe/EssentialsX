@@ -65,11 +65,12 @@ public class Commandtpa extends EssentialsCommand {
             }
             player.requestTeleport(user, false);
             player.sendTl("teleportRequest", user.getDisplayName());
-            player.sendTl("typeTpaccept");
-            player.sendTl("typeTpdeny");
             if (ess.getSettings().getTpaAcceptCancellation() != 0) {
                 player.sendTl("teleportRequestTimeoutInfo", ess.getSettings().getTpaAcceptCancellation());
             }
+            player.sendTl("typeTpaccept");
+            player.sendTl("typeTpdeny");
+
         }
 
         user.sendTl("requestSent", player.getDisplayName());
