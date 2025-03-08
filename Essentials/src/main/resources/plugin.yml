@@ -159,7 +159,7 @@ commands:
   fly:
     description: Take off, and soar!
     usage: /<command> [player] [on|off]
-    aliases: [efly]
+    aliases: [efly,f]
   fireball:
     description: Throw a fireball or other assorted projectiles.
     usage: /<command> [fireball|small|large|arrow|skull|egg|snowball|expbottle|dragon|splashpotion|lingeringpotion|trident] [speed]
@@ -211,7 +211,7 @@ commands:
   home:
     description: Teleport to your home.
     usage: /<command> [player:][name]
-    aliases: [ehome,homes,ehomes]
+    aliases: [ehome,homes,ehomes,hoem]
   ice:
     description: Cools a player off.
     usage: /<command> [player]
@@ -587,7 +587,7 @@ commands:
   warp:
     description: List all warps or warp to the specified location.
     usage: /<command> <pagenumber|warp> [player]
-    aliases: [ewarp,warps,ewarps]
+    aliases: [ewarp,warps,ewarps,wapr]
   warpinfo:
     description: Finds location information for a specified warp.
     usage: /<command> <warp>
