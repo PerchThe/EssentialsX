@@ -24,7 +24,7 @@ commands:
   back:
     description: Teleports you to your location prior to tp/spawn/warp.
     usage: /<command> [player]
-    aliases: [eback,return,ereturn]
+    aliases: [eback,return,ereturn,bakc]
   backup:
     description: Runs the backup if configured.
     usage: /<command>
