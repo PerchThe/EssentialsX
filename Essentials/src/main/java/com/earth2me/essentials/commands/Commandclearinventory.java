@@ -53,7 +53,7 @@ public class Commandclearinventory extends EssentialsCommand {
             senderUser.setConfirmingClearCommand(null);
         }
 
-        if (allowAll && args.length > 0 && args[0].contentEquals("*")) {
+        if (allowAll && args.length > 0 && args[0].contentEquals("ALL")) {
             sender.sendTl("inventoryClearingFromAll");
             offset = 1;
             players = ess.getOnlinePlayers();
@@ -90,9 +90,9 @@ public class Commandclearinventory extends EssentialsCommand {
             amount = Integer.parseInt(args[offset + 1]);
         }
         if (args.length > offset) {
-            if (args[offset].equalsIgnoreCase("**")) {
+            if (args[offset].equalsIgnoreCase("PLAYERANDARMOR")) {
                 type = ClearHandlerType.ALL_INCLUDING_ARMOR;
-            } else if (!args[offset].equalsIgnoreCase("*")) {
+            } else if (!args[offset].equalsIgnoreCase("ALL")) {
                 final String[] split = args[offset].split(",");
                 for (final String item : split) {
                     final String[] itemParts = item.split(":");
@@ -156,13 +156,13 @@ public class Commandclearinventory extends EssentialsCommand {
                 final List<String> options = getPlayers(server, user);
                 if (user.isAuthorized("essentials.clearinventory.all") || user.isAuthorized("essentials.clearinventory.multiple")) {
                     // Assume that nobody will have the 'all' permission without the 'others' permission
-                    options.add("*");
+                    options.add("ALL");
                 }
                 return options;
             } else if (args.length == 2) {
                 final List<String> items = new ArrayList<>(getItems());
-                items.add("*");
-                items.add("**");
+                items.add("ALL");
+                items.add("PLAYERANDARMOR");
                 return items;
             } else {
                 return Collections.emptyList();
@@ -170,8 +170,8 @@ public class Commandclearinventory extends EssentialsCommand {
         } else {
             if (args.length == 1) {
                 final List<String> items = new ArrayList<>(getItems());
-                items.add("*");
-                items.add("**");
+                items.add("ALL");
+                items.add("PLAYERANDARMOR");
                 return items;
             } else {
                 return Collections.emptyList();
@@ -183,12 +183,12 @@ public class Commandclearinventory extends EssentialsCommand {
     protected List<String> getTabCompleteOptions(final Server server, final CommandSource sender, final String commandLabel, final String[] args) {
         if (args.length == 1) {
             final List<String> options = getPlayers(server, sender);
-            options.add("*");
+            options.add("ALL");
             return options;
         } else if (args.length == 2) {
             final List<String> items = new ArrayList<>(getItems());
-            items.add("*");
-            items.add("**");
+            items.add("ALL");
+            items.add("PLAYERANDARMOR");
             return items;
         } else {
             return Collections.emptyList();
