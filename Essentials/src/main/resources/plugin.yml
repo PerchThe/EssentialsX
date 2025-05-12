@@ -243,7 +243,7 @@ commands:
   itemname:
     description: Names an item.
     usage: /<command> [name]
-    aliases: [iname, einame, eitemname, itemrename, irename, eitemrename, eirename]
+    aliases: [iname, einame, eitemname, itemrename, irename, eitemrename, eirename, rename]
   jails:
     description: List all jails.
     usage: /<command>
