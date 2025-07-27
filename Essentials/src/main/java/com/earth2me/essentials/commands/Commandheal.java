@@ -6,6 +6,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.Collections;
@@ -60,8 +61,18 @@ public class Commandheal extends EssentialsLoopCommand {
                 newAmount = player.getMaxHealth();
             }
 
-            player.setHealth(newAmount);
-            player.setFoodLevel(20);
+            final int flceAmount = 30;
+
+            final FoodLevelChangeEvent flce = new FoodLevelChangeEvent(player, flceAmount);
+            ess.getServer().getPluginManager().callEvent(flce);
+            if (flce.isCancelled()) {
+                throw new QuietAbortException();
+            }
+
+            player.setFoodLevel(Math.min(flce.getFoodLevel(), 20));
+            ess.getLogger().info("set food level for " + player.getName() + " to " + Math.min(flce.getFoodLevel(), 20));
+            player.setSaturation(10);
+            player.setExhaustion(0F);
             player.setFireTicks(0);
             user.sendTl("heal");
             if (ess.getSettings().isRemovingEffectsOnHeal()) {
