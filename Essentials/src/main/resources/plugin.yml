@@ -321,7 +321,7 @@ commands:
     aliases: [enear,nearby,enearby]
   nick:
     description: Change your nickname or that of another player.
-    usage: /<command> [player] <nickname|off>
+    usage: /<command> [player] <nickname|[off,clear,remove]>
     aliases: [enick,nickname,enickname]
   nuke:
     description: May death rain upon them.

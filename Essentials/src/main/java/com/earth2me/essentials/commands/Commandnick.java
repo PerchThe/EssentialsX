@@ -43,7 +43,7 @@ public class Commandnick extends EssentialsLoopCommand {
     @Override
     protected void updatePlayer(final Server server, final CommandSource sender, final User target, final String[] args) throws NotEnoughArgumentsException {
         final String nick = args[0];
-        if ("off".equalsIgnoreCase(nick)) {
+        if ("off".equalsIgnoreCase(nick) || "clear".equalsIgnoreCase(nick) || "remove".equalsIgnoreCase(nick)) {
             setNickname(server, sender, target, null);
             target.sendTl("nickNoMore");
         } else if (target.getName().equalsIgnoreCase(nick)) {
