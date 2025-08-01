@@ -699,6 +699,15 @@ public abstract class UserData extends PlayerExtension implements IConf {
         save();
     }
 
+    public boolean isPromptingNickConfirm() {
+        return holder.confirmNick() != null ? holder.confirmNick() : ess.getSettings().isConfirmCommandEnabledByDefault("nick");
+    }
+
+    public void setPromptingNickConfirm(final boolean prompt) {
+        holder.confirmNick(prompt);
+        save();
+    }
+
     public boolean isPromptingPayConfirm() {
         return holder.confirmPay() != null ? holder.confirmPay() : ess.getSettings().isConfirmCommandEnabledByDefault("pay");
     }
