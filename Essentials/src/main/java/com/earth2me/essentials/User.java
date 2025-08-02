@@ -66,7 +66,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     // User command confirmation strings
     private final Map<User, BigDecimal> confirmingPayments = new WeakHashMap<>();
-    private String confirmingNickCommand;
     private String confirmingClearCommand;
     private String lastHomeConfirmation;
 
@@ -1181,14 +1180,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     @Override
     public Map<User, BigDecimal> getConfirmingPayments() {
         return confirmingPayments;
-    }
-
-    public String getConfirmingNickCommand() {
-        return confirmingNickCommand;
-    }
-
-    public void setConfirmingNickCommand(final String command) {
-        this.confirmingNickCommand = command;
     }
 
     public String getConfirmingClearCommand() {

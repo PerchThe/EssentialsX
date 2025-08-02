@@ -292,16 +292,6 @@ public class UserConfigHolder {
         this.acceptingPay = value;
     }
 
-    private @Nullable Boolean confirmNick;
-
-    public Boolean confirmNick() {
-        return this.confirmNick;
-    }
-
-    public void confirmNick(final Boolean value) {
-        this.confirmNick = value;
-    }
-
     private @Nullable Boolean confirmPay;
 
     public Boolean confirmPay() {

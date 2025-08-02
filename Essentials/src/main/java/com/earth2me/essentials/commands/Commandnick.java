@@ -3,7 +3,6 @@ package com.earth2me.essentials.commands;
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import com.earth2me.essentials.utils.StringUtil;
 import net.ess3.api.TranslatableException;
 import net.ess3.api.events.NickChangeEvent;
 import org.bukkit.Server;
@@ -11,15 +10,12 @@ import org.bukkit.Server;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 public class Commandnick extends EssentialsLoopCommand {
     public Commandnick() {
         super("nick");
     }
-
-    String previousNickCommand = "";
 
     @Override
     public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
@@ -31,17 +27,6 @@ public class Commandnick extends EssentialsLoopCommand {
             loopOfflinePlayers(server, user.getSource(), false, true, args[0], formatNickname(user, args[1]).split(" "));
             user.sendTl("nickChanged");
         } else {
-
-            final String formattedCommand = formatCommand(commandLabel, args);
-            // Clear previous command execution before potential errors to reset confirmation.
-            previousNickCommand = user.getConfirmingNickCommand();
-            if (user != null && user.isPromptingNickConfirm()) {
-                if (!formattedCommand.equals(previousNickCommand)) {
-                    user.setConfirmingNickCommand(formattedCommand);
-                    user.sendTl("confirmNick", formattedCommand);
-                    return;
-                }
-            }
             updatePlayer(server, user.getSource(), user, formatNickname(user, args[0]).split(" "));
         }
     }
@@ -57,7 +42,6 @@ public class Commandnick extends EssentialsLoopCommand {
 
     @Override
     protected void updatePlayer(final Server server, final CommandSource sender, final User target, final String[] args) throws NotEnoughArgumentsException {
-        final AtomicBoolean informToConfirm = new AtomicBoolean(false);
         final String nick = args[0];
         if ("off".equalsIgnoreCase(nick) || "clear".equalsIgnoreCase(nick) || "remove".equalsIgnoreCase(nick)) {
             setNickname(server, sender, target, null);
@@ -106,13 +90,6 @@ public class Commandnick extends EssentialsLoopCommand {
             return FormatUtil.stripFormat(nick).length();
         }
         return FormatUtil.unformatString(nick).length();
-    }
-
-    private String formatCommand(final String commandLabel, final String[] args) {
-        if (args == null || args.length == 0) {
-            return "/" + commandLabel;
-        }
-        return "/" + commandLabel + " " + StringUtil.joinList(" ", (Object[]) args);
     }
 
     private boolean nickInUse(final User target, final String nick) {

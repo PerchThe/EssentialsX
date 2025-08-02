@@ -323,9 +323,6 @@ commands:
     description: Change your nickname or that of another player.
     usage: /<command> [player] <nickname|[off,clear,remove]>
     aliases: [enick,nickname,enickname]
-  nicknametoggle:
-    description: enable nickname confirmations
-    usage: /<command> <on|off>
   nuke:
     description: May death rain upon them.
     usage: /<command> [player]
