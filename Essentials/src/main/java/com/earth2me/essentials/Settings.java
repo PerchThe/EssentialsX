@@ -80,6 +80,7 @@ public class Settings implements net.ess3.api.ISettings {
     private Set<String> socialSpyCommands = new HashSet<>();
     private Set<String> muteCommands = new HashSet<>();
     private String nicknamePrefix = "~";
+    private int nicknameCooldown;
     private String operatorColor = null;
     private List<Material> itemSpawnBl = new ArrayList<>();
     private List<EssentialsSign> enabledSigns = new ArrayList<>();
@@ -511,6 +512,15 @@ public class Settings implements net.ess3.api.ISettings {
         return nicknamePrefix;
     }
 
+    private int _getNicknameCooldown() {
+        return config.getInt("nickname-cooldown", 0);
+    }
+
+    @Override
+    public int getNicknameCooldown() {
+        return nicknameCooldown;
+    }
+
     @Override
     public double getTeleportCooldown() {
         return config.getDouble("teleport-cooldown", 0);
@@ -884,6 +894,7 @@ public class Settings implements net.ess3.api.ISettings {
         }
 
         nicknamePrefix = _getNicknamePrefix();
+        nicknameCooldown = _getNicknameCooldown();
         operatorColor = _getOperatorColor();
         changePlayerListName = _changePlayerListName();
         configDebug = _isDebug();

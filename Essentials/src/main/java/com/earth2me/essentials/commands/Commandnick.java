@@ -2,6 +2,7 @@ package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
+import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.StringUtil;
 import net.ess3.api.TranslatableException;
@@ -9,9 +10,9 @@ import net.ess3.api.events.NickChangeEvent;
 import org.bukkit.Server;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 public class Commandnick extends EssentialsLoopCommand {
@@ -20,6 +21,7 @@ public class Commandnick extends EssentialsLoopCommand {
     }
 
     String previousNickCommand = "";
+    public HashMap<String, Long> cooldown = new HashMap<String, Long>();
 
     @Override
     public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
@@ -35,12 +37,17 @@ public class Commandnick extends EssentialsLoopCommand {
             final String formattedCommand = formatCommand(commandLabel, args);
             // Clear previous command execution before potential errors to reset confirmation.
             previousNickCommand = user.getConfirmingNickCommand();
+            if("off".equalsIgnoreCase(args[0]) || "clear".equalsIgnoreCase(args[0]) || "remove".equalsIgnoreCase(args[0])) return;
             if (user != null && user.isPromptingNickConfirm()) {
                 if (!formattedCommand.equals(previousNickCommand)) {
                     user.setConfirmingNickCommand(formattedCommand);
                     user.sendTl("confirmNick", formattedCommand);
                     return;
                 }
+            }
+            if(isOnCooldown(user)) {
+                user.sendTl("commandCooldown", DateUtil.formatDateDiff(getCooldown(user)));
+                return;
             }
             updatePlayer(server, user.getSource(), user, formatNickname(user, args[0]).split(" "));
         }
@@ -57,12 +64,12 @@ public class Commandnick extends EssentialsLoopCommand {
 
     @Override
     protected void updatePlayer(final Server server, final CommandSource sender, final User target, final String[] args) throws NotEnoughArgumentsException {
-        final AtomicBoolean informToConfirm = new AtomicBoolean(false);
         final String nick = args[0];
         if ("off".equalsIgnoreCase(nick) || "clear".equalsIgnoreCase(nick) || "remove".equalsIgnoreCase(nick)) {
             setNickname(server, sender, target, null);
             target.sendTl("nickNoMore");
         } else if (target.getName().equalsIgnoreCase(nick)) {
+            setCooldown(target);
             setNickname(server, sender, target, nick);
             if (!target.getDisplayName().equalsIgnoreCase(target.getDisplayName())) {
                 target.sendTl("nickNoMore");
@@ -71,6 +78,7 @@ public class Commandnick extends EssentialsLoopCommand {
         } else if (nickInUse(target, nick)) {
             throw new NotEnoughArgumentsException(sender.tl("nickInUse"));
         } else {
+            setCooldown(target);
             setNickname(server, sender, target, nick);
             target.sendTl("nickSet", ess.getSettings().changeDisplayName() ? target.getDisplayName() : nick);
         }
@@ -138,6 +146,19 @@ public class Commandnick extends EssentialsLoopCommand {
             target.setNickname(nickname);
             target.setDisplayNick();
         }
+    }
+
+    private boolean isOnCooldown(final User user){
+        return getCooldown(user) > System.currentTimeMillis();
+    }
+
+    private long getCooldown(final User user){
+        return cooldown.get(user.getName());
+    }
+
+    private void setCooldown(User user) {
+        final Long time = System.currentTimeMillis() + (ess.getSettings().getNicknameCooldown() * 1000L);
+        cooldown.put(user.getName(), time);
     }
 
     @Override

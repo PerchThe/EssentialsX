@@ -33,6 +33,9 @@ ops-name-color: '4'
 # Players with 'essentials.nick.hideprefix' will not be prefixed with the character(s).
 nickname-prefix: '~'
 
+# The time in seconds between uses of the /nick command
+nickname-cooldown: '0'
+
 # The maximum length allowed in nicknames. The nickname prefix is not included in this.
 max-nick-length: 15
 
