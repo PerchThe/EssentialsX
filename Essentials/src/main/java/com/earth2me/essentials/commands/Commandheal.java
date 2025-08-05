@@ -71,7 +71,7 @@ public class Commandheal extends EssentialsLoopCommand {
 
             player.setFoodLevel(Math.min(flce.getFoodLevel(), 20));
             ess.getLogger().info("set food level for " + player.getName() + " to " + Math.min(flce.getFoodLevel(), 20));
-            player.setSaturation(10);
+            player.setSaturation(20);
             player.setExhaustion(0F);
             player.setFireTicks(0);
             player.setHealth(newAmount);
