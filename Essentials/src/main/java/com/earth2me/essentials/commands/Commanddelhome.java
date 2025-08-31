@@ -6,6 +6,7 @@ import com.earth2me.essentials.User;
 import net.ess3.api.TranslatableException;
 import net.essentialsx.api.v2.events.HomeModifyEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Server;
 
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ public class Commanddelhome extends EssentialsCommand {
     }
 
     private void deleteHome(CommandSource sender, User user, String home) {
-        final HomeModifyEvent event = new HomeModifyEvent(sender.getUser(), user, home, user.getHome(home), false);
+        final Location location = user.getHome(home);
+        final HomeModifyEvent event = new HomeModifyEvent(sender.getUser(), user, home, location, false);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             if (ess.getSettings().isDebug()) {
@@ -29,8 +31,12 @@ public class Commanddelhome extends EssentialsCommand {
         }
 
         try {
+            final String world = location.getWorld().getName();
+            final String x = String.valueOf(location.getBlockX());
+            final String y = String.valueOf(location.getBlockY());
+            final String z = String.valueOf(location.getBlockZ());
             user.delHome(home);
-            sender.sendTl("deleteHome", home);
+            sender.sendTl("deleteHome", home, world, x, y, z);
         } catch (Exception e) {
             sender.sendTl("invalidHome", home);
         }
