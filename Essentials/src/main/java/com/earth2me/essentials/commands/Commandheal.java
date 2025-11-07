@@ -84,7 +84,9 @@ public class Commandheal extends EssentialsLoopCommand {
                     player.removePotionEffect(effect.getType());
                 }
             }
-            sender.sendTl("healOther", user.getDisplayName());
+            if (!sender.isPlayer() || !user.getBase().equals(sender.getPlayer())) {
+                sender.sendTl("healOther", user.getDisplayName());
+            }
         } catch (final QuietAbortException e) {
             //Handle Quietly
         }
