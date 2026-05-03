@@ -179,7 +179,7 @@ public class Kit {
             final List<String> commandQueue = new ArrayList<>();
             final List<String> moneyQueue = new ArrayList<>();
             final String currencySymbol = ess.getSettings().getCurrencySymbol().isEmpty() ? "$" : ess.getSettings().getCurrencySymbol();
-            for (final String kitItem : output.getLines()) {
+            for (String kitItem : output.getLines()) {
                 if (kitItem.startsWith("$") || kitItem.startsWith(currencySymbol)) {
                     moneyQueue.add(NumberUtil.sanitizeCurrencyString(kitItem, ess));
                     continue;

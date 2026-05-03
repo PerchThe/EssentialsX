@@ -44,8 +44,9 @@ public final class VersionUtil {
     public static final BukkitVersion v1_21_5_R01 = BukkitVersion.fromString("1.21.5-R0.1-SNAPSHOT");
     public static final BukkitVersion v1_21_8_R01 = BukkitVersion.fromString("1.21.8-R0.1-SNAPSHOT");
     public static final BukkitVersion v1_21_11_R01 = BukkitVersion.fromString("1.21.11-R0.1-SNAPSHOT");
+    public static final BukkitVersion v26_1_2_R01 = BukkitVersion.fromString("26.1.2-R0.1-SNAPSHOT");
 
-    private static final Set<BukkitVersion> supportedVersions = ImmutableSet.of(v1_8_8_R01, v1_9_4_R01, v1_10_2_R01, v1_11_2_R01, v1_12_2_R01, v1_13_2_R01, v1_14_4_R01, v1_15_2_R01, v1_16_5_R01, v1_17_1_R01, v1_18_2_R01, v1_19_4_R01, v1_20_6_R01, v1_21_11_R01);
+    private static final Set<BukkitVersion> supportedVersions = ImmutableSet.of(v1_8_8_R01, v1_9_4_R01, v1_10_2_R01, v1_11_2_R01, v1_12_2_R01, v1_13_2_R01, v1_14_4_R01, v1_15_2_R01, v1_16_5_R01, v1_17_1_R01, v1_18_2_R01, v1_19_4_R01, v1_20_6_R01, v1_21_11_R01, v26_1_2_R01);
 
     public static final boolean PRE_FLATTENING = VersionUtil.getServerBukkitVersion().isLowerThan(VersionUtil.v1_13_0_R01);
 
@@ -167,7 +168,8 @@ public final class VersionUtil {
     }
 
     public static final class BukkitVersion implements Comparable<BukkitVersion> {
-        private static final Pattern VERSION_PATTERN = Pattern.compile("^(\\d+)\\.(\\d+)\\.?([0-9]*)?(?:-pre(\\d))?(?:-rc(\\d+))?(?:-?R?([\\d.]+))?(?:-SNAPSHOT)?");
+        // Regex modified to require a digit after the R instead of accepting a lone dot
+        private static final Pattern VERSION_PATTERN = Pattern.compile("^(\\d+)\\.(\\d+)\\.?([0-9]*)?(?:-pre(\\d))?(?:-rc(\\d+))?(?:-?R?(\\d[\\d.]*))?(?:-SNAPSHOT)?.*");
         private static final Pattern SNAPSHOT_PATTERN = Pattern.compile("^(\\d{2})w(\\d{2})([a-z])(?:-?R?([\\d.]+))?(?:-SNAPSHOT)?");
 
         private final int major;
@@ -196,7 +198,7 @@ public final class VersionUtil {
         }
 
         private BukkitVersion(final int major, final int minor, final int patch, final double revision, final int preRelease, final int releaseCandidate,
-                               final boolean snapshot, final int snapshotYear, final int snapshotWeek, final char snapshotLetter) {
+                              final boolean snapshot, final int snapshotYear, final int snapshotWeek, final char snapshotLetter) {
             this.major = major;
             this.minor = minor;
             this.patch = patch;
@@ -242,15 +244,16 @@ public final class VersionUtil {
 
         private static BukkitVersion from(final String major, final String minor, String patch, String revision, String preRelease, String releaseCandidate) {
             if (patch == null || patch.isEmpty()) patch = "0";
-            if (revision == null || revision.isEmpty()) revision = "0";
+            // Extra safety net added here to prevent parsing errors on solitary dots
+            if (revision == null || revision.isEmpty() || revision.equals(".")) revision = "0";
             if (preRelease == null || preRelease.isEmpty()) preRelease = "-1";
             if (releaseCandidate == null || releaseCandidate.isEmpty()) releaseCandidate = "-1";
             return new BukkitVersion(Integer.parseInt(major),
-                Integer.parseInt(minor),
-                Integer.parseInt(patch),
-                Double.parseDouble(revision),
-                Integer.parseInt(preRelease),
-                Integer.parseInt(releaseCandidate));
+                    Integer.parseInt(minor),
+                    Integer.parseInt(patch),
+                    Double.parseDouble(revision),
+                    Integer.parseInt(preRelease),
+                    Integer.parseInt(releaseCandidate));
         }
 
         private static BukkitVersion fromSnapshot(final int year, final int week, final char letter, final double revision) {
@@ -312,16 +315,16 @@ public final class VersionUtil {
             final BukkitVersion that = (BukkitVersion) o;
             if (snapshot || that.snapshot) {
                 return snapshot == that.snapshot &&
-                    snapshotYear == that.snapshotYear &&
-                    snapshotWeek == that.snapshotWeek &&
-                    snapshotLetter == that.snapshotLetter &&
-                    Double.compare(revision, that.revision) == 0;
+                        snapshotYear == that.snapshotYear &&
+                        snapshotWeek == that.snapshotWeek &&
+                        snapshotLetter == that.snapshotLetter &&
+                        Double.compare(revision, that.revision) == 0;
             }
             return major == that.major &&
-                minor == that.minor &&
-                patch == that.patch &&
-                revision == that.revision &&
-                preRelease == that.preRelease;
+                    minor == that.minor &&
+                    patch == that.patch &&
+                    revision == that.revision &&
+                    preRelease == that.preRelease;
         }
 
         @Override

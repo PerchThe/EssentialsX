@@ -9,10 +9,22 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Commandheal extends EssentialsLoopCommand {
+
+    // A predefined set of all harmful potion effects across all Spigot versions.
+    private static final Set<String> HARMFUL_EFFECTS = new HashSet<>(Arrays.asList(
+            "BLINDNESS", "CONFUSION", "HARM", "HUNGER", "POISON",
+            "SLOW", "SLOW_DIGGING", "WEAKNESS", "WITHER",
+            "LEVITATION", "UNLUCK", "BAD_OMEN", "DARKNESS",
+            "OOZING", "WEAVING", "WIND_CHARGED", "INFESTED"
+    ));
+
     public Commandheal() {
         super("heal");
     }
@@ -79,16 +91,17 @@ public class Commandheal extends EssentialsLoopCommand {
             player.setFireTicks(0);
             player.setRemainingAir(player.getMaximumAir());
             user.sendTl("heal");
-            if (ess.getSettings().isRemovingEffectsOnHeal()) {
-                for (final PotionEffect effect : player.getActivePotionEffects()) {
+
+            for (final PotionEffect effect : player.getActivePotionEffects()) {
+                if (effect.getType() != null && HARMFUL_EFFECTS.contains(effect.getType().getName())) {
                     player.removePotionEffect(effect.getType());
                 }
             }
+
             if (!sender.isPlayer() || !user.getBase().equals(sender.getPlayer())) {
                 sender.sendTl("healOther", user.getDisplayName());
             }
         } catch (final QuietAbortException e) {
-            //Handle Quietly
         }
     }
 
